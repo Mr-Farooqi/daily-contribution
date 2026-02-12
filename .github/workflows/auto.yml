@@ -20,7 +20,7 @@ jobs:
       - name: Commit changes
         run: |
           git config --local user.email "md.adil4078600@gmail.com"
-          git config --local user.name "your-username"
+          git config --local user.name "Mohammad.Adil"
           git add .
           git commit -m "Daily auto commit"
           git push
