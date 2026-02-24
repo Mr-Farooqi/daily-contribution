@@ -1,4 +1,4 @@
-name: Daily Commit
+name: Smart Daily Activity
 
 on:
   schedule:
@@ -16,14 +16,39 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Make changes
-        run: |
-          echo "Updated on $(date)" >> log.txt
-
-      - name: Commit changes
+      - name: Generate realistic commits
         run: |
           git config --local user.email "md.adil4078600@gmail.com"
           git config --local user.name "mr-farooqi"
-          git add .
-          git commit -m "Daily auto commit" || echo "No changes to commit"
+
+          # Random commits between 8 and 12
+          COUNT=$((RANDOM % 5 + 8))
+
+          echo "Generating $COUNT commits today..."
+
+          mkdir -p src docs data
+
+          for ((i=1; i<=COUNT; i++))
+          do
+            FILE_TYPE=$((RANDOM % 3))
+
+            if [ $FILE_TYPE -eq 0 ]; then
+              FILE="src/app.js"
+              echo "// Update $(date) - $RANDOM" >> $FILE
+            elif [ $FILE_TYPE -eq 1 ]; then
+              FILE="docs/readme.md"
+              echo "### Update $(date)" >> $FILE
+              echo "- Refactored module $RANDOM" >> $FILE
+            else
+              FILE="data/data.json"
+              echo "{\"update\":\"$(date)\", \"value\": \"$RANDOM\"}" >> $FILE
+            fi
+
+            git add .
+            git commit -m "Update module $RANDOM"
+
+            # Random delay between commits
+            sleep $((RANDOM % 5 + 1))
+          done
+
           git push
